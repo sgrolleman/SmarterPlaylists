@@ -1,7 +1,7 @@
 import os
 from flask import Flask, request, jsonify, send_from_directory
-from flask.ext.cors import cross_origin
-from werkzeug.contrib.fixers import ProxyFix
+from flask_cors import cross_origin
+from werkzeug.middleware.proxy_fix import ProxyFix
 
 import json
 import components
@@ -38,7 +38,7 @@ def inventory():
         'status': 'ok',
         'inventory': components.exported_inventory,
     }
-    print 'inventory', time.time() - start
+    print('inventory', time.time() - start)
     return jsonify(results)
 
 @app.route('/SmarterPlaylists/save', methods=['POST'])
@@ -169,7 +169,7 @@ def directory():
         token = auth.get_fresh_token(auth_code)
         if token:
             user = token['user_id']
-            print "directory", user
+            print("directory", user)
             total, dir = pm.directory(user, start, count)
 
             if len(dir) > 0:
@@ -355,7 +355,7 @@ def shared_info():
             if is_shared:
                 results['status'] = 'ok'
                 out = {}
-                for k, v in info.items():
+                for k, v in list(info.items()):
                     if k in keep_set:
                         out[k] = v
                 results['info'] = out
@@ -384,7 +384,7 @@ def publish():
 
     results = { }
     if not token:
-        print 'WARNING: bad auth token', auth_code
+        print('WARNING: bad auth token', auth_code)
         results['status'] = 'error'
         results['message'] = 'not authorized'
     else:
@@ -443,7 +443,7 @@ def run():
         results['tracks'] = tracks
         for i, tid in enumerate(results['tids']):
             if app.trace:
-                print i, pbl.tlib.get_tn(tid)
+                print(i, pbl.tlib.get_tn(tid))
             tracks.append(pbl.tlib.get_track(tid))
     return jsonify(results)
 
@@ -459,7 +459,7 @@ def schedule():
 
     token = auth.get_fresh_token(auth_code)
     if not token:
-        print 'WARNING: bad auth token', auth_code
+        print('WARNING: bad auth token', auth_code)
         results['status'] = 'error'
         results['message'] = 'not authorized'
     else:
@@ -470,7 +470,7 @@ def schedule():
         total = params['total']
         ok = True
 
-        print 'delta', delta, 'when', when, 'total', total
+        print('delta', delta, 'when', when, 'total', total)
 
         if delta != 0 and delta < min_delta:
             results['status'] = 'error'
@@ -508,12 +508,12 @@ def force_error():
     }
     bad = {}
     if bad['missing']:
-        print "forced error"
+        print("forced error")
     return jsonify(results)
 
 @app.errorhandler(Exception)
 def handle_invalid_usage(error):
-    print "error", error
+    print("error", error)
     traceback.print_stack()
     results = { 
         'status': 'internal_error',
@@ -533,11 +533,11 @@ if __name__ == '__main__':
         if arg == '--trace':
             app.trace = True
     if app.debug:
-        print 'debug  mode'
+        print('debug  mode')
         app.run(threaded=False, debug=True)
     elif app.wsgi:
         from gevent.wsgi import WSGIServer
-        print 'prod  mode'
+        print('prod  mode')
         http_server = WSGIServer(('', 5000), app)
         http_server.serve_forever()
     else:

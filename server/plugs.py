@@ -2,7 +2,7 @@ import pbl
 import datetime
 import random
 import spotipy
-from werkzeug.contrib.cache import SimpleCache
+from cachelib import SimpleCache
 from pbl import spotify_plugs
 import simplejson as json
 import time
@@ -141,7 +141,7 @@ class TrackFilter(object):
                     return track
                 else:
                     if self.debug:
-                        print 'filtered out', pbl.tlib.get_tn(track)
+                        print('filtered out', pbl.tlib.get_tn(track))
             else:
                 break
         return None
@@ -179,7 +179,7 @@ class ArtistFilter(object):
                     return track
                 else:
                     if self.debug:
-                        print 'filtered out', pbl.tlib.get_tn(track)
+                        print('filtered out', pbl.tlib.get_tn(track))
             else:
                 break
         return None
@@ -429,9 +429,9 @@ class PlaylistSave(object):
             uri = find_playlist_by_name(sp, user, self.playlist_name)
 
         if uri:
-            print 'found',  uri
+            print('found',  uri)
         else:
-            print 'creating new', self.playlist_name, 'playlist'
+            print('creating new', self.playlist_name, 'playlist')
             response = sp.user_playlist_create(user, self.playlist_name)
             uri = response['uri']
 
@@ -439,14 +439,14 @@ class PlaylistSave(object):
         if pid:
             batch_size = 100
             uris = [ 'spotify:track:' + id for id in self.buffer]
-            for start in xrange(0, len(uris), batch_size):
+            for start in range(0, len(uris), batch_size):
                 turis = uris[start:start+batch_size]
                 if start == 0 and not self.append:
                     sp.user_playlist_replace_tracks(user, pid, turis)
                 else:
                     sp.user_playlist_add_tracks(user, pid, turis)
         else:
-            print "Can't get authenticated access to spotify"
+            print("Can't get authenticated access to spotify")
 
 
 class PlaylistSaveToNew(object):
@@ -514,11 +514,11 @@ class PlaylistSaveToNew(object):
         if pid:
             batch_size = 100
             uris = [ 'spotify:track:' + id for id in self.buffer]
-            for start in xrange(0, len(uris), batch_size):
+            for start in range(0, len(uris), batch_size):
                 turis = uris[start:start+batch_size]
                 sp.user_playlist_add_tracks(user, pid, turis)
         else:
-            print "Can't get authenticated access to spotify"
+            print("Can't get authenticated access to spotify")
 
 
 def get_pid_from_playlist_uri(uri):
@@ -557,7 +557,7 @@ def save_to_playlist(title, uri, tids):
 
     if not uri:
         response = sp.user_playlist_create(user, title)
-        print "create playlist", json.dumps(response, indent=4)
+        print("create playlist", json.dumps(response, indent=4))
         if 'uri' in response:
             uri = response['uri']
         else:
@@ -567,14 +567,14 @@ def save_to_playlist(title, uri, tids):
     if pid:
         batch_size = 100
         uris = [ 'spotify:track:' + id for id in tids]
-        for start in xrange(0, len(uris), batch_size):
+        for start in range(0, len(uris), batch_size):
             turis = uris[start:start+batch_size]
             if start == 0:
                 sp.user_playlist_replace_tracks(user, pid, turis)
             else:
                 sp.user_playlist_add_tracks(user, pid, turis)
     else:
-        print "Can't get authenticated access to spotify"
+        print("Can't get authenticated access to spotify")
     return uri
 
 class MySavedTracks(object):
@@ -1031,9 +1031,9 @@ class SeparateArtists(object):
         score = 0
         indexes = set()
 
-        for i in xrange(len(self.tracks) - 1):
+        for i in range(len(self.tracks) - 1):
             aname = self.tracks[i]['artist']
-            for j in xrange(i + 1, len(self.tracks)):
+            for j in range(i + 1, len(self.tracks)):
 
                 if j - i >= min_delta_allowed:
                     break
@@ -1065,7 +1065,7 @@ class SeparateArtists(object):
         cur_score, indexes = self.score_list()
         no_swap = 0
 
-        for i in xrange(max_tries):
+        for i in range(max_tries):
 
             if cur_score == 0 or len(indexes) == 0:
                 break
@@ -1417,39 +1417,39 @@ if __name__ == '__main__':
         pbl.show_source(src)
 
     if False:
-        print 'with dedup'
+        print('with dedup')
         src = pbl.PlaylistSource("extender test", None, 'plamere')
         src = ArtistDeDup(src)
         pbl.show_source(src)
 
-        print 'no dedup'
+        print('no dedup')
         src = pbl.PlaylistSource("extender test", None, 'plamere')
         pbl.show_source(src)
 
     if False:
-        print 'weighted source'
+        print('weighted source')
 
-        print 'factor', 1
+        print('factor', 1)
         src = pbl.PlaylistSource("extender test", None, 'plamere')
         src = WeightedShuffler(src, 1)
         pbl.show_source(src)
 
-        print 'factor', 0
+        print('factor', 0)
         src = pbl.PlaylistSource("extender test", None, 'plamere')
         src = WeightedShuffler(src, 0)
         pbl.show_source(src)
 
-        print 'factor', .5
+        print('factor', .5)
         src = pbl.PlaylistSource("extender test", None, 'plamere')
         src = WeightedShuffler(src, .5)
         pbl.show_source(src)
 
-        print 'factor', .1
+        print('factor', .1)
         src = pbl.PlaylistSource("extender test", None, 'plamere')
         src = WeightedShuffler(src, .1)
         pbl.show_source(src)
 
-        print 'factor', .01
+        print('factor', .01)
         src = pbl.PlaylistSource("extender test", None, 'plamere')
         src = WeightedShuffler(src, .01)
         pbl.show_source(src)
@@ -1458,46 +1458,46 @@ if __name__ == '__main__':
         sixmonths = 60 * 60 * 24 * 30 * 6
         onemonth = 60 * 60 * 24 * 30 * 1
 
-        print "older than six months"
+        print("older than six months")
         src = RelativeDatedPlaylistSource("extender test", None, 'plamere',
             order_by_date_added=False, 
             tracks_added_since=None, tracks_added_before="6 months")
         pbl.show_source(src)
 
-        print "new than six months"
+        print("new than six months")
         src = RelativeDatedPlaylistSource("extender test", None, 'plamere',
             order_by_date_added=False, 
             tracks_added_since="six mnths", tracks_added_before="")
         pbl.show_source(src)
 
-        print "new than six months, older than one month"
+        print("new than six months, older than one month")
         src = RelativeDatedPlaylistSource("extender test", None, 'plamere',
             order_by_date_added=False, 
             tracks_added_since="six months", tracks_added_before="1 month")
         pbl.show_source(src)
 
     if False:
-        print 'std'
+        print('std')
         src = pbl.PlaylistSource("extender test", None, 'plamere')
         pbl.show_source(src)
 
         src = pbl.PlaylistSource("extender test", None, 'plamere')
         src = TextFilter(src, 'the', True, False)
-        print src.name 
+        print(src.name) 
         pbl.show_source(src)
 
         src = pbl.PlaylistSource("extender test", None, 'plamere')
         src = TextFilter(src, 'the', False, False)
-        print src.name 
+        print(src.name) 
         pbl.show_source(src)
 
         src = pbl.PlaylistSource("extender test", None, 'plamere')
         src = TextFilter(src, 'the', True, True)
-        print src.name 
+        print(src.name) 
         pbl.show_source(src)
 
     if False:
-        print 'std'
+        print('std')
         src = pbl.PlaylistSource('trap music', uri = 'spotify:user:spotify:playlist:4Ha7Qja6HY3AgvNBgWz87p')
         pbl.show_source(src)
 
