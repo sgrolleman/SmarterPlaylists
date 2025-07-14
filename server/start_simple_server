@@ -1,4 +1,9 @@
 source credentials.sh
 export PBL_CACHE=REDIS
-./runner.full python flask_server.py
+
+REDIS_HOST="${REDIS_HOST:-localhost}"
+REDIS_PORT="${REDIS_PORT:-6379}"
+export REDIS_HOST REDIS_PORT
+
+./runner.full python3 flask_server.py
 #gunicorn flask_server:app -b localhost:8000

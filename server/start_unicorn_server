@@ -2,7 +2,11 @@ source credentials.sh
 export PBL_CACHE=REDIS
 #python flask_server.py
 
-until gunicorn -w 4 flask_server:app -b localhost:5000; do
+REDIS_HOST="${REDIS_HOST:-localhost}"
+REDIS_PORT="${REDIS_PORT:-6379}"
+export REDIS_HOST REDIS_PORT
+
+until python3 -m gunicorn -w 4 flask_server:app -b localhost:5000; do
     echo "unicorn server crashed with exit code $?.  Respawning.." >&2
     sleep 1
 done

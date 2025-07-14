@@ -3,4 +3,8 @@ source credentials.sh
 export PBL_CACHE=REDIS
 export SPOTIPY_REDIRECT_URI='http://localhost:8000/auth.html'
 
-python flask_server.py --debug
+REDIS_HOST="${REDIS_HOST:-localhost}"
+REDIS_PORT="${REDIS_PORT:-6379}"
+export REDIS_HOST REDIS_PORT
+
+python3 flask_server.py --debug
