@@ -65,7 +65,7 @@ def convert_val_to_type(val, type, program):
     elif type == 'bool':
         return OK, bool(val)
     elif type == 'port':
-        if isinstance(val, basestring):
+        if isinstance(val, str):
             status, compiled_program = compile_object(val, program)
             return status, compiled_program
         elif isinstance(val, list):
@@ -129,14 +129,14 @@ def compile_object(objname, program):
             if spec:
                 params = { }
 
-                for param, val in comp['sources'].items():
+                for param, val in list(comp['sources'].items()):
                     status, cval = get_param_val(param, val, spec, program)
                     if status == OK:
                         params[param] = cval
                     else:
                         return status + " in " + objname, None
 
-                for param, val in comp['params'].items():
+                for param, val in list(comp['params'].items()):
                     status, cval = get_param_val(param, val, spec, program)
                     if status == OK:
                         params[param] = cval
@@ -150,7 +150,7 @@ def compile_object(objname, program):
                     return OK, obj
                 except pbl.PBLException as e:
                     #traceback.print_exc()
-                    print 'e reason', e.reason
+                    print('e reason', e.reason)
                     raise pbl.PBLException(None, e.reason, objname)
                 except:
                     traceback.print_exc()
@@ -183,7 +183,7 @@ if __name__ == '__main__':
 
         status, obj = compile(source_obj)
         if status == OK:
-            print 'compiled! = running'
+            print('compiled! = running')
             pbl.show_source(obj, props= ['src', 'duration'])
         else:
-            print 'Whoops', status
+            print('Whoops', status)

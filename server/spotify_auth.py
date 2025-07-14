@@ -32,9 +32,9 @@ class SpotifyAuth(object):
         self.client_redirect_uri = os.environ.get('SPOTIPY_REDIRECT_URI')
         self.trace = False
 
-        print 'client id', self.client_id 
-        print 'client secret', self.client_secret 
-        print 'client redirect uri', self.client_redirect_uri 
+        print('client id', self.client_id) 
+        print('client secret', self.client_secret) 
+        print('client redirect uri', self.client_redirect_uri) 
 
         if self.client_id == None or self.client_secret == None or \
             self.client_redirect_uri == None:
@@ -81,9 +81,9 @@ class SpotifyAuth(object):
             user = token['user_id']
             self._put('token:' + code, token)
             if self.trace:
-                print 'added token to db', code, token
+                print('added token to db', code, token)
         else:
-            print "can't get user info, bailing"
+            print("can't get user info, bailing")
             return None
         return token
 
@@ -100,7 +100,7 @@ class SpotifyAuth(object):
         if r.status_code >= 200 and r.status_code < 300:
             token = r.json()
             if self.trace:
-                print 'got back token', token
+                print('got back token', token)
             return token
         else:
             return None
@@ -121,7 +121,7 @@ class SpotifyAuth(object):
         if r.status_code >= 200 and r.status_code < 300:
             new_token = r.json()
             if self.trace:
-                print 'got back token', token
+                print('got back token', token)
             if not 'refresh_token' in new_token:
                 new_token['refresh_token'] = token['refresh_token']
             return new_token
@@ -145,7 +145,7 @@ class SpotifyAuth(object):
         if len(r.text) > 0:
             results = r.json()
             if self.trace:  # pragma: no cover
-                print('RESP', results)
+                print(('RESP', results))
                 print()
             return results
         else:
@@ -177,7 +177,7 @@ if __name__ == '__main__':
     token = spauth.get_fresh_token(my_code)
     if token:
         remaining = token['expires_at'] - time.time()
-        print 'Got a token that expires in', remaining, 'seconds'
+        print('Got a token that expires in', remaining, 'seconds')
     else:
-        print 'no token for that code'
+        print('no token for that code')
 

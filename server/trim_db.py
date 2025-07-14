@@ -40,7 +40,7 @@ def trim_results(name):
         r.ltrim(name, 0, last_result_to_keep)
         trimmed_jobs += 1
 
-    print "%d %s %4d %8d %8d %8d %8d" % (i, fmt_date(results['runtime']), get_age(results['runtime']), total_jobs, removed_jobs, trimmed_jobs, keep_all_jobs)
+    print("%d %s %4d %8d %8d %8d %8d" % (i, fmt_date(results['runtime']), get_age(results['runtime']), total_jobs, removed_jobs, trimmed_jobs, keep_all_jobs))
 
 def count_results(name):
     global total_byte_count, expired_byte_count, unexpired_byte_count
@@ -54,7 +54,7 @@ def count_results(name):
             unexpired_byte_count += len(js)
         else:
             expired_byte_count += len(js)
-    print "%d %s %4d %8d %8d %8d" % (i, fmt_date(results['runtime']), get_age(results['runtime']), unexpired_byte_count, expired_byte_count, total_byte_count)
+    print("%d %s %4d %8d %8d %8d" % (i, fmt_date(results['runtime']), get_age(results['runtime']), unexpired_byte_count, expired_byte_count, total_byte_count))
 
 def show_results(name):
     results = r.lrange(name, 0, 100)
@@ -62,7 +62,7 @@ def show_results(name):
     for i, js in enumerate(results):
         results = json.loads(js)
         # print json.dumps(results, indent=4)
-        print "TTL", ttl
+        print("TTL", ttl)
         show_result(results)
 
 def expire_key(name):
@@ -70,15 +70,15 @@ def expire_key(name):
 
 
 def show_result(result):
-    print "%s %s %.2f" % (result['status'], fmt_date(result['runtime']), result['time'])
-    print result['oinfo']
-    print result['info']
+    print("%s %s %.2f" % (result['status'], fmt_date(result['runtime']), result['time']))
+    print(result['oinfo'])
+    print(result['info'])
     if result['status'] == 'ok':
-        print result['name']
-        print result['uri']
+        print(result['name'])
+        print(result['uri'])
     else:
-        print result['message']
-    print
+        print(result['message'])
+    print()
 
 def fmt_date(ts):
     date = datetime.date.fromtimestamp(ts)
@@ -148,4 +148,4 @@ if __name__ == '__main__':
         elif arg == '--expire':
             expire()
         else:
-            print "unknown arg", arg
+            print("unknown arg", arg)

@@ -43,7 +43,7 @@ if __name__ == '__main__':
 
     def batch_write(count):
         start_time = time.time()
-        for i in xrange(count):
+        for i in range(count):
             pid = "%d12345678%d" %(i, i)
             payload = {
                 "contents": "contents for pid " + pid,
@@ -52,11 +52,11 @@ if __name__ == '__main__':
             put(pid, json.dumps(payload))
 
         delta = time.time() - start_time
-        print "wrote %d records in %d ms. %.4f ms per record" % (count, int(delta * 1000), (delta * 1000 / count))
+        print("wrote %d records in %d ms. %.4f ms per record" % (count, int(delta * 1000), (delta * 1000 / count)))
 
     def batch_read(count):
         pids = []
-        for i in xrange(count):
+        for i in range(count):
             pid = "%d12345678%d" %(i, i)
             pids.append(pid)
 
@@ -71,11 +71,11 @@ if __name__ == '__main__':
                 if contents:
                     found += 1
                     if verbose:
-                        print json.dumps(contents, indent=2)
+                        print(json.dumps(contents, indent=2))
 
 
         delta = time.time() - start_time
-        print "found %d of  %d records in %d ms. %.4f ms per record" % (found, count, int(delta * 1000), (delta * 1000 / count))
+        print("found %d of  %d records in %d ms. %.4f ms per record" % (found, count, int(delta * 1000), (delta * 1000 / count)))
 
         
     args = sys.argv[1:]
@@ -98,7 +98,7 @@ if __name__ == '__main__':
                 payload['extra'] = args.pop(0)
             write = True
         else:
-            print "unknown arg", arg
+            print("unknown arg", arg)
             sys.exit(1)
 
     if write:

@@ -75,7 +75,7 @@ class Scheduler(object):
             'runs', 'total', 'when'])
 
         out = {}
-        for k, v in status.items():
+        for k, v in list(status.items()):
             if k in skip_fields:
                 continue
             if k in int_fields:
@@ -84,7 +84,7 @@ class Scheduler(object):
         return out
         
     def post_job(self, skey, when):
-        print 'posting', skey, 'to run in', when - time.time(), 'secs'
+        print('posting', skey, 'to run in', when - time.time(), 'secs')
         pipe = self.r.pipeline()
         pipe.hset(skey, 'status', 'queued')
         pipe.hset(skey, 'next_run', when)
@@ -141,16 +141,16 @@ class Scheduler(object):
     def wait_for_next(self):
         timeout = self.get_next_delta()
         if timeout > 0:
-            print 'waiting for', timeout, 'secs'
+            print('waiting for', timeout, 'secs')
             self.r.blpop(self.wait_queue, timeout)
         return self.get_next_item()
             
     def execute_job(self, skey):
         results = None
         info = self.r.hgetall(skey)
-        print 'execute_job', skey, info
+        print('execute_job', skey, info)
         if info:
-            print 'execute_job', info
+            print('execute_job', info)
             auth_code = info['auth_code']
             pid = info['pid']
             results = self.pm.execute_program(auth_code, pid, True)
@@ -179,9 +179,9 @@ class Scheduler(object):
         runs = int(info['runs'])
         delta = int(info['delta'])
 
-        print
-        print 'info', info
-        print
+        print()
+        print('info', info)
+        print()
 
         user = info['user']
         pid = info['pid']
@@ -223,23 +223,23 @@ class Scheduler(object):
         return int(time.time())
 
     def process_job_queue(self):
-        print 'starting job pusher'
+        print('starting job pusher')
         while True:
             skey = self.wait_for_next()
             if skey:
-                print '    pushing', skey
+                print('    pushing', skey)
                 self.r.rpush(self.proc_queue, skey)
 
     def process_jobs(self):
-        print 'starting job processor'
+        print('starting job processor')
         while True:
             _,skey = self.r.blpop(self.proc_queue)
             if skey:
-                print '   processing', skey
+                print('   processing', skey)
                 self.run_job(skey)
             else:
                 break
-        print 'shutting down job processor'
+        print('shutting down job processor')
 
     def start_processing_threads(self, threads=5):
         def worker():
@@ -247,33 +247,33 @@ class Scheduler(object):
 
         self.show_info()
 
-        for i in xrange(threads):
+        for i in range(threads):
             t = threading.Thread(target=worker)
             t.daemon = True
             t.start()
         sched.process_job_queue()
 
     def show_info(self):
-        count = self.r.zcount(self.job_queue, -sys.maxint, sys.maxint)
-        print 'job queue has', count, 'jobs'
+        count = self.r.zcount(self.job_queue, -sys.maxsize, sys.maxsize)
+        print('job queue has', count, 'jobs')
 
         
 def show_results(result):
     try:
-        print "%s %s %.2f" % (result['status'], fmt_date(result['runtime']), result['time'])
-        print result['oinfo']
-        print result['info']
+        print("%s %s %.2f" % (result['status'], fmt_date(result['runtime']), result['time']))
+        print(result['oinfo'])
+        print(result['info'])
         if result['status'] == 'ok':
-            print result['name']
-            print result['uri']
+            print(result['name'])
+            print(result['uri'])
         else:
-            print result['message']
-        print
+            print(result['message'])
+        print()
     except:
         raise
-        print "trouble showing formatted result"
-        print json.dumps(result, indent=2)
-        print
+        print("trouble showing formatted result")
+        print(json.dumps(result, indent=2))
+        print()
 
 def fmt_date(ts):
     the_date = date.fromtimestamp(ts)

@@ -2,7 +2,7 @@ import os
 import sys
 import cherrypy
 from cherrypy import tools
-import ConfigParser
+import configparser
 import json
 import time
 import components
@@ -18,31 +18,31 @@ class SmarterPlaylistServer(object):
     @tools.json_out()
     def inventory(self):
         start = time.time()
-        print 'inventory'
+        print('inventory')
         results = {
             'status': 'ok',
             'inventory': components.exported_inventory,
             'types': components.inventory['types']
         }
-        print 'inventory', time.time() - start
+        print('inventory', time.time() - start)
         return results
 
     @cherrypy.expose
     @tools.json_out()
     @tools.json_in()
     def run(self):
-        print 'inventory'
+        print('inventory')
         start = time.time()
         # program = request.json
-        print cherrypy.request.headers
+        print(cherrypy.request.headers)
         cl = cherrypy.request.headers['Content-Length']
         #rawbody = cherrypy.request.body.read(int(cl))
         program = cherrypy.request.json
 
-        print 'got program', program
+        print('got program', program)
         status, obj = compiler.compile(program)
 
-        print 'compiled in', time.time() - start, 'secs'
+        print('compiled in', time.time() - start, 'secs')
 
         if 'max_tracks' in program:
             max_tracks = program['max_tracks']
@@ -54,19 +54,19 @@ class SmarterPlaylistServer(object):
         if status == 'ok':
             tracks = []
             tids = pbl.get_tracks(obj, max_tracks)
-            print
+            print()
             for i, tid in enumerate(tids):
-                print i, pbl.tlib.get_tn(tid)
+                print(i, pbl.tlib.get_tn(tid))
                 tracks.append(pbl.tlib.get_track(tid))
-            print
+            print()
             results['tracks'] = tracks
             results['name'] = obj.name
 
         results['time'] = time.time() - start
-        print 'compiled and executed in', time.time() - start, 'secs'
+        print('compiled and executed in', time.time() - start, 'secs')
         if app.trace:
-            print json.dumps(results, indent=4)
-        print 'run', time.time() - start
+            print(json.dumps(results, indent=4))
+        print('run', time.time() - start)
         return results
   
 

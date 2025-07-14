@@ -18,7 +18,7 @@ def runner(source, max_tracks = 100, props=[]):
 class TestPlugs(unittest.TestCase):
 
     def test_artist_dedup(self):
-        print 'with dedup'
+        print('with dedup')
         src = pbl.PlaylistSource("extender test", None, 'plamere')
         src = ArtistDeDup(src)
         de_dup_size = runner(src, 500)

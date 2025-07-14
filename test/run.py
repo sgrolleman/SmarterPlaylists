@@ -13,6 +13,6 @@ if __name__ == '__main__':
         results = response.json()
         if results['status'] == 'ok':
             for i, track in enumerate(results['tracks']):
-                print i + 1, track['title'], track['artist']
+                print(i + 1, track['title'], track['artist'])
         else:
-            print results['status']
+            print(results['status'])

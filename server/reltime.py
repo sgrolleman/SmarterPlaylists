@@ -88,7 +88,7 @@ def parse_to_rel_time(str):
     if len(words) % 2 == 1:
         raise ValueError('bad time format: ' + str)
         
-    for i in xrange(0, len(words), 2):
+    for i in range(0, len(words), 2):
         snum = words[i]
         type = words[i + 1].lower()
 
@@ -137,25 +137,25 @@ if __name__ == '__main__':
     for stest, res in tests:
         time = parse_to_rel_time(stest)
         if time == res:
-            print "GOOD", stest, time
+            print("GOOD", stest, time)
         else:
-            print "BAD", stest, res, time
+            print("BAD", stest, res, time)
 
-    print
-    print 'testing bad patterns'
+    print()
+    print('testing bad patterns')
     for bp in bad_patterns:
         try:
             time = parse_to_rel_time(bp)
-            print 'BAD', 'unexpected parse of', bp
+            print('BAD', 'unexpected parse of', bp)
         except ValueError as e:
-            print 'GOOD', e
+            print('GOOD', e)
 
-    print "some time examples"
+    print("some time examples")
     for stest, res in tests:
-        print 'parse_to_rel_time("' + stest + '")', '->', res
+        print('parse_to_rel_time("' + stest + '")', '->', res)
 
-    print "some time examples"
+    print("some time examples")
     for stest, res in tests:
-        print "<li>" + stest + "</li>"
-    print
+        print("<li>" + stest + "</li>")
+    print()
 

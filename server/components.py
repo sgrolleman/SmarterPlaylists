@@ -2090,11 +2090,11 @@ def is_valid_param_type(type):
     if type in inventory['types']:
         return True
 
-    print "invalid type", type
+    print("invalid type", type)
     return False
 
 def check_component(comp):
-    print "checking", comp["name"]
+    print("checking", comp["name"])
     '''
         {
             "name" : "Annotator",
@@ -2130,7 +2130,7 @@ def check_component(comp):
     assert "type" in comp
     assert "description" in comp
     if "params" in comp:
-        for name, param in comp["params"].items():
+        for name, param in list(comp["params"].items()):
             assert "description" in param
             assert "type" in param
             ptype = param['type']
@@ -2153,6 +2153,6 @@ if __name__ == '__main__':
     import json
     #get_genres()
     if False:
-        print json.dumps(exported_inventory, indent=4)
-        print ""
+        print(json.dumps(exported_inventory, indent=4))
+        print("")
 

@@ -107,7 +107,7 @@ class Mixer(object):
         for idx, hartist in enumerate(reversed(self.artist_history)):
             if artist == hartist:
                 return idx + 1
-        return sys.maxint
+        return sys.maxsize
             
 
     def prep(self):

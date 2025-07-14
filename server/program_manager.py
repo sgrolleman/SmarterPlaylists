@@ -58,7 +58,7 @@ class ProgramManager:
             }
         '''
         if debug_exceptions:
-            print "WARNING: debugging exceptions"
+            print("WARNING: debugging exceptions")
 
 
     def add_program(self, user, program):
@@ -148,7 +148,7 @@ class ProgramManager:
                 info['shared'] = info['shared'] == 'True'
                 if "owner" not in info:
                     info["owner"] = user
-                    print "directory:patched owner", user
+                    print("directory:patched owner", user)
                 out.append(info)
         out.sort(key=lambda x:x['name'].lower())
         return total, out
@@ -223,7 +223,7 @@ class ProgramManager:
         pkey = mkkey('program-stats', pid)
         stats = self.r.hgetall(pkey)
         out = {}
-        for k, v in stats.items():
+        for k, v in list(stats.items()):
             out[k] = int(float(v))
         return out
 
@@ -257,12 +257,12 @@ class ProgramManager:
             pbl.engine.clearEnvData()
             token = self.auth.get_fresh_token(auth_code)
             if not token:
-                print 'WARNING: bad auth token', auth_code
+                print('WARNING: bad auth token', auth_code)
                 results['status'] = 'error'
                 results['message'] = 'not authorized'
             else:
                 delta = token['expires_at'] - time.time()
-                print 'cur token expires in', delta, 'secs'
+                print('cur token expires in', delta, 'secs')
                 user = token['user_id']
                 program = self.get_program(user, pid)
                 if not program:
@@ -270,10 +270,10 @@ class ProgramManager:
                 pbl.engine.setEnv('spotify_auth_token', token['access_token'])
                 pbl.engine.setEnv('spotify_user_id', token['user_id'])
 
-                print 'executing', user, pid
+                print('executing', user, pid)
                 # print '# executing', json.dumps(program, indent=4)
                 status, obj = compiler.compile(program)
-                print 'compiled in', time.time() - start, 'secs'
+                print('compiled in', time.time() - start, 'secs')
 
                 if 'max_tracks' in program:
                     max_tracks = program['max_tracks']
@@ -312,7 +312,7 @@ class ProgramManager:
             else:
                 cname = e.cname
             results['component'] = cname
-            print 'PBLException', json.dumps(results, indent=4)
+            print('PBLException', json.dumps(results, indent=4))
             traceback.print_exc()
             if debug_exceptions:
                 raise
@@ -320,14 +320,14 @@ class ProgramManager:
         except Exception as e:
             results['status'] = 'error'
             results['message'] = str(e)
-            print 'General Exception', json.dumps(results, indent=4)
+            print('General Exception', json.dumps(results, indent=4))
             traceback.print_exc()
             if debug_exceptions:
                 raise
 
         pbl.engine.clearEnvData()
         results['time'] = time.time() - start
-        print 'compiled and executed in', time.time() - start, 'secs'
+        print('compiled and executed in', time.time() - start, 'secs')
 
         self.add_stat(pid, 'last_run', time.time());
         if results['status'] == 'ok':
@@ -335,7 +335,7 @@ class ProgramManager:
         else:
             self.inc_stat(pid, 'errors');
 
-        print 'run', time.time() - start, results['status']
+        print('run', time.time() - start, results['status'])
         return results
 
     def share_program(self, user, pid):
@@ -389,14 +389,14 @@ if __name__ == '__main__':
 
     def show_dir(user):
         for pid in p.directory(user):
-            print pid,
+            print(pid, end=' ')
             program = p.get_program(user, pid)
             pprint.pprint(program)
-            print
+            print()
 
 
 
-    print 'dir', p.directory(user)
+    print('dir', p.directory(user))
 
     program = mk_program()
     p.add_program(user, program)
