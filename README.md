@@ -78,3 +78,16 @@ python3 -m pytest -q
 
 The tests rely on the external `pbl` package. If it is not installed the test
 suite will fail to import the module.
+
+### Standalone Executable
+
+A helper script `run_app.py` is provided to bootstrap dependencies and launch the application locally. The script installs the Python packages listed in `requirements.txt` before starting the Flask server and opening `web/index.html` in the default browser.
+
+To build a single executable using [PyInstaller](https://pyinstaller.org), run the following commands:
+
+```bash
+pip install pyinstaller
+pyinstaller -F run_app.py
+```
+
+The generated binary will install any missing dependencies the first time it is executed.
