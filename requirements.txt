@@ -1,0 +1,11 @@
+Flask
+flask-cors
+redis
+requests
+simplejson
+spotipy
+pyen
+pbl
+cachelib
+cherrypy
+Werkzeug
